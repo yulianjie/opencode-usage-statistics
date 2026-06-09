@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenCode Tokens · 用量分析台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+<div class="bg-grid" aria-hidden="true"></div>
+<div class="bg-glow" aria-hidden="true"></div>
+
+<div class="app">
+  <header class="masthead">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">◇</span>
+      <div class="brand-text">
+        <h1>OpenCode<span class="dot">·</span>Tokens</h1>
+        <p>用量分析台 / token telemetry</p>
+      </div>
+    </div>
+
+    <div class="controls">
+      <div class="segmented" id="segmented" role="tablist" aria-label="数据来源">
+        <button class="seg active" data-src="default" type="button">默认</button>
+        <button class="seg" data-src="path" type="button">路径</button>
+        <button class="seg" data-src="upload" type="button">上传</button>
+      </div>
+
+      <div class="control-input" id="pathField" hidden>
+        <input type="text" id="pathInput" class="path-input" placeholder="opencode.db 完整路径，回车分析" spellcheck="false">
+      </div>
+      <div class="control-input" id="fileField" hidden>
+        <label class="file-label" id="fileLabel">
+          <input type="file" id="fileInput" accept=".db">
+          <span id="fileLabelText">选择 opencode.db…</span>
+        </label>
+      </div>
+
+      <button id="refreshBtn" class="btn primary" type="button" title="刷新当前数据源">
+        <span class="btn-glyph">⟳</span><span>刷新</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="sourceline">
+    <span class="source-dot" id="sourceDot"></span>
+    <span class="source-label" id="sourceLabel">尚未加载数据源</span>
+    <span class="chips" id="headChips"></span>
+    <span class="spacer"></span>
+    <div class="export-group">
+      <button id="exportCsvBtn" class="btn ghost" type="button" disabled>导出 CSV</button>
+      <button id="exportReportBtn" class="btn ghost" type="button" disabled>导出报告</button>
+    </div>
+  </div>
+
+  <div id="status" class="status hidden"></div>
+
+  <nav class="tabs" id="tabs">
+    <button class="tab active" data-tab="overview">总览</button>
+    <button class="tab" data-tab="models">模型</button>
+    <button class="tab" data-tab="sessions">会话</button>
+    <button class="tab" data-tab="days">日期</button>
+    <button class="tab" data-tab="messages">明细</button>
+    <span class="tab-ink" id="tabInk"></span>
+  </nav>
+
+  <main>
+    <section id="tab-overview" class="tab-panel active">
+      <div id="cards" class="cards"></div>
+      <div class="charts">
+        <div class="chart-box full">
+          <div class="chart-head"><span class="chart-title">每日 Token 趋势</span></div>
+          <div class="chart-canvas"><canvas id="trendChart"></canvas></div>
+        </div>
+        <div class="chart-box">
+          <div class="chart-head"><span class="chart-title">模型 Token · Top 10</span></div>
+          <div class="chart-canvas"><canvas id="modelBarChart"></canvas></div>
+        </div>
+        <div class="chart-box">
+          <div class="chart-head"><span class="chart-title">模型占比</span></div>
+          <div class="chart-canvas"><canvas id="modelPieChart"></canvas></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-models" class="tab-panel">
+      <div id="modelsTable" class="table-wrap"></div>
+    </section>
+
+    <section id="tab-sessions" class="tab-panel">
+      <div class="table-toolbar">
+        <span class="toolbar-hint">勾选多个会话可合并导出到一份报告</span>
+        <span class="spacer"></span>
+        <span class="sel-count" id="selCount">已选 0</span>
+        <button id="clearSelBtn" class="btn ghost sm" type="button" disabled>清空</button>
+        <button id="exportSelectedBtn" class="btn primary sm" type="button" disabled>导出选中报告</button>
+      </div>
+      <div id="sessionsTable" class="table-wrap"></div>
+    </section>
+
+    <section id="tab-days" class="tab-panel">
+      <div id="daysTable" class="table-wrap"></div>
+    </section>
+
+    <section id="tab-messages" class="tab-panel">
+      <div class="pager">
+        <button id="prevPage" class="btn ghost sm" type="button">←</button>
+        <span id="pageInfo" class="page-info"></span>
+        <button id="nextPage" class="btn ghost sm" type="button">→</button>
+      </div>
+      <div id="messagesTable" class="table-wrap"></div>
+    </section>
+  </main>
+
+  <div class="empty-state" id="emptyState">
+    <div class="empty-glyph">◇</div>
+    <p class="empty-title">等待数据源</p>
+    <p class="empty-sub">选择「默认 / 路径 / 上传」后将自动分析</p>
+  </div>
+</div>
+
+<script src="/static/chart.umd.min.js"></script>
+<script src="/static/app.js"></script>
+</body>
+</html>
